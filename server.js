@@ -9,7 +9,7 @@ const checkoutRoutes = require("./routes/checkoutRoutes");
 const menuRoutes = require("./routes/menuRoutes");
 const customizationRoutes = require("./routes/customizationRoutes");
 const cartRoutes = require("./routes/cartRoutes");
-const orderRoutes = require("./routes/orderRoutes"); // ✅ NEW
+const orderRoutes = require("./routes/orderRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 
 const app = express();
@@ -17,6 +17,9 @@ const app = express();
 /* -------------------- MIDDLEWARE -------------------- */
 app.use(cors());
 app.use(express.json());
+
+/* ✅ SERVE UPLOADED IMAGES */
+app.use("/uploads", express.static("uploads"));
 
 /* -------------------- MONGODB -------------------- */
 mongoose
@@ -33,8 +36,7 @@ app.use("/api/menu", menuRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/customization", customizationRoutes);
 app.use("/api/cart", cartRoutes);
-app.use("/api/orders", orderRoutes); // ✅ ORDER ROUTE
-
+app.use("/api/orders", orderRoutes);
 
 /* -------------------- DEBUG -------------------- */
 app.get("/debug", (req, res) => {
