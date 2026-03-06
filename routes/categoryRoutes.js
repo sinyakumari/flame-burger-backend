@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Category = require("../models/category");
+const MenuItem = require("../models/menuItems");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
@@ -32,13 +33,30 @@ router.get("/", async (req, res) => {
   try {
     const categories = await Category.find().sort({ sortOrder: 1 });
 
-    // Add full image URL
-    const updatedCategories = categories.map((cat) => ({
-      ...cat._doc,
-      image: cat.image
-        ? `http://localhost:3000/uploads/${cat.image}`
-        : "",
-    }));
+    // Fetch up to one item per category to grab a placeholder image if needed
+    const updatedCategories = await Promise.all(
+      categories.map(async (cat) => {
+        let imageUrl = cat.image ? `http://localhost:3000/uploads/${cat.image}` : "";
+        
+        // If category has no image, find any menu item that belongs to it
+        if (!imageUrl) {
+          const item = await MenuItem.findOne({ category: cat._id });
+          if (item && item.img) {
+            // Re-using the same image fallback logic established on the ordering page
+             imageUrl = item.img.startsWith('http') || item.img.startsWith('/assets') 
+                ? item.img 
+                : item.img.startsWith('/uploads') 
+                    ? `http://localhost:3000${item.img}` 
+                    : `/src/assets/${item.img}`;
+          }
+        }
+
+        return {
+          ...cat._doc,
+          image: imageUrl
+        };
+      })
+    );
 
     res.json(updatedCategories);
   } catch (error) {
