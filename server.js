@@ -27,6 +27,7 @@ app.use((req, res, next) => {
 
 /* ✅ SERVE UPLOADED IMAGES */
 app.use("/uploads", express.static("uploads"));
+app.use("/assets/menu", express.static("assets/menu"));
 
 /* -------------------- MONGODB -------------------- */
 mongoose
