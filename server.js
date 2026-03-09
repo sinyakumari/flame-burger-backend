@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const authRoutes = require("./routes/authRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 const checkoutRoutes = require("./routes/checkoutRoutes");
 const menuRoutes = require("./routes/menuRoutes");
 const customizationRoutes = require("./routes/customizationRoutes");
@@ -39,6 +40,7 @@ mongoose
 
 /* -------------------- ROUTES -------------------- */
 app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/checkout", checkoutRoutes);
 app.use("/api/menu", menuRoutes);
 app.use("/api/categories", categoryRoutes);

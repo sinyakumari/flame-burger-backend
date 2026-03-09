@@ -53,7 +53,7 @@ router.post("/login", async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id: user._id, role: user.role },
+            { id: user._id.toString(), role: user.role },
             "flame_secret_key",
             { expiresIn: "7d" }
         );
